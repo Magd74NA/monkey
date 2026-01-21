@@ -1,33 +1,34 @@
 # import std/sequtils
 import ../token/token as tok
 
-type
-    Node = object
-        TokenLiteral: proc()
-    Statement = object
-        Node: Node
-    Expression = object
-        Node: Node
-    Program* = object
-        Statements: seq[Statement] # Programs are a dynamic array (nim sequence) of statements
-    Identifier = object
-        Token: tok.Token
-        Value: string
-    LetStatement = object
-        Token: tok.Token
-        Name: Identifier
-        Value: Expression
+type NodeKind* = enum
+      nodeLetStatement
+      nodeIdentifier
+      nodeIntegerLiteral
 
+type Node* = ref object
+      token*: tok.Token
+      case kind*: NodeKind
+            of nodeLetStatement:
+                  name*: Node 
+                  value*: Node 
+            of nodeIdentifier:
+                  identValue*: string
+            of nodeIntegerLiteral:
+                  intValue*: int
 
+type Program* = object
+      statements*: seq[Node]
 
-proc statementNode(ls: var LetStatement) =
-    var PLACEHOLDER = "TODO"
+proc tokenLiteral*(node: Node): string =
+  case node.kind
+  of nodeLetStatement: node.token.literal
+  of nodeIdentifier: node.identValue
+  of nodeIntegerLiteral: $node.intValue
 
-proc TokenLiteral(ls: LetStatement): string =
-    return ls.Token.Literal
+proc tokenLiteral*(p: Program): string =
+  if p.statements.len > 0:
+    p.statements[0].tokenLiteral()
+  else:
+    ""
 
-proc expressionNode(i: var Identifier) =
-    var PLACEHOLDER = "TODO"
-
-proc TokenLiteral(i: Identifier): string =
-    return i.Token.Literal
