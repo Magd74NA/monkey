@@ -9,13 +9,13 @@ type NodeKind* = enum
 type Node* = ref object
       token*: tok.Token
       case kind*: NodeKind
-            of nodeLetStatement:
-                  name*: Node 
-                  value*: Node 
-            of nodeIdentifier:
-                  identValue*: string
-            of nodeIntegerLiteral:
-                  intValue*: int
+      of nodeLetStatement:
+            name*: Node 
+            value*: Node 
+      of nodeIdentifier:
+            identValue*: string
+      of nodeIntegerLiteral:
+            intValue*: int
 
 type Program* = object
       statements*: seq[Node]
