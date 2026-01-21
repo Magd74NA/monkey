@@ -8,7 +8,7 @@ type
         readPosition: int
         ch: char #Consider switching to unicode runes?
 
-method readChar(self: Lexer) {.base.} =
+proc readChar(self: Lexer) =
     if self.readPosition >= len(self.line):
         self.ch = '\0'
     else:
@@ -16,12 +16,12 @@ method readChar(self: Lexer) {.base.} =
     self.position = self.readPosition
     self.readPosition += 1
 
-func Init*(input: string): Lexer =
+proc Init*(input: string): Lexer =
     let l: Lexer = Lexer(line: input)
     l.readChar
     return l
 
-method peekChar*(self: Lexer): char {.base.} =
+proc peekChar*(self: Lexer): char =
     if self.readPosition >= len(self.line):
         return '\0'
     else:
@@ -36,23 +36,23 @@ func isDigit(ch: char): bool =
 func isLetter(ch: char): bool =
     return ('a' <= ch and ch <= 'z') or ('A' <= ch and ch <= 'Z') or ch == '_'
 
-method skipWhitespace(self: Lexer) {.base.} =
+proc skipWhitespace(self: Lexer) =
     while self.ch == ' ' or self.ch == '\t' or self.ch == '\n' or self.ch == '\r':
         self.readChar
 
-method readIdentifier(self: Lexer): string {.base.} =
+proc readIdentifier(self: Lexer): string =
     let start = self.position
     while isLetter(self.ch):
         self.readChar
     return self.line[start..self.position-1]
 
-method readDigit(self: Lexer): string {.base.} =
+proc readDigit(self: Lexer): string =
     let start = self.position
     while isDigit(self.ch):
         self.readChar
     return self.line[start..self.position-1]
 
-method NextToken*(self: Lexer): Token {.base.} =
+proc NextToken*(self: Lexer): Token =
     var tok: Token
     self.skipWhitespace
     case self.ch:
