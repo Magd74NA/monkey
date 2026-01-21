@@ -11,7 +11,7 @@ proc start*() =
         let ok = readLineFromStdin(PROMPT, line)
         if not ok: break # ctrl-C or ctrl-D will cause a break
         if line.len > 0:
-            let l = lexer.Init(line)
+            var l = lexer.Init(line)
             var tok = l.NextToken
             while tok.Type != EOF:
                 echo tok, "\n"

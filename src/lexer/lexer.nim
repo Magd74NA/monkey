@@ -1,28 +1,26 @@
 import ../token/token
 
 type
-    Lexer* = ref LexerObj
-    LexerObj = object
+    Lexer* = object
         line: string
         position: int
         readPosition: int
         ch: char #Consider switching to unicode runes?
 
-proc readChar(self: Lexer) =
-    if self.readPosition >= len(self.line):
+proc readChar(self: var Lexer) =
+    if self.readPosition >= self.line.len:
         self.ch = '\0'
     else:
         self.ch = self.line[self.readPosition]
     self.position = self.readPosition
     self.readPosition += 1
 
-proc Init*(input: string): Lexer =
-    let l: Lexer = Lexer(line: input)
-    l.readChar
-    return l
+func Init*(input: string): Lexer =
+    result = Lexer(line: input)
+    result.readChar
 
-proc peekChar*(self: Lexer): char =
-    if self.readPosition >= len(self.line):
+func peekChar*(self: Lexer): char =
+    if self.readPosition >= self.line.len:
         return '\0'
     else:
         return self.line[self.readPosition]
@@ -36,23 +34,23 @@ func isDigit(ch: char): bool =
 func isLetter(ch: char): bool =
     return ('a' <= ch and ch <= 'z') or ('A' <= ch and ch <= 'Z') or ch == '_'
 
-proc skipWhitespace(self: Lexer) =
+proc skipWhitespace(self: var Lexer) =
     while self.ch == ' ' or self.ch == '\t' or self.ch == '\n' or self.ch == '\r':
         self.readChar
 
-proc readIdentifier(self: Lexer): string =
+proc readIdentifier(self: var Lexer): string =
     let start = self.position
     while isLetter(self.ch):
         self.readChar
     return self.line[start..self.position-1]
 
-proc readDigit(self: Lexer): string =
+proc readDigit(self: var Lexer): string =
     let start = self.position
     while isDigit(self.ch):
         self.readChar
     return self.line[start..self.position-1]
 
-proc NextToken*(self: Lexer): Token =
+proc NextToken*(self: var Lexer): Token =
     var tok: Token
     self.skipWhitespace
     case self.ch:
