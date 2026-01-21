@@ -43,8 +43,8 @@ const
 type TokenType* = string
 
 type Token* = object
-    Type: TokenType
-    Literal: string
+    Type*: TokenType
+    Literal*: string
 
 const keywords* = tables.toTable([
     ("fn", FUNCTION),
