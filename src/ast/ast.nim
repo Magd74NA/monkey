@@ -22,7 +22,7 @@ type Program* = object
 
 proc tokenLiteral*(node: Node): string =
   case node.kind
-  of nodeLetStatement: node.token.literal
+  of nodeLetStatement: node.token.Literal
   of nodeIdentifier: node.identValue
   of nodeIntegerLiteral: $node.intValue
 
